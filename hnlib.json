@@ -1,0 +1,21 @@
+{
+    "path": "$HN_LIB",
+    "load_package_once": true,
+    "env":
+    [
+        {
+            "PACKAGE_PATH": "$HN_LIB"
+        },
+        {
+            "HOUDINI_OTLSCAN_PATH":
+            {
+                "method": "append",
+                "value":
+                [
+                    "$PACKAGE_PATH/otls",
+                    "$PACKAGE_PATH/otls/examples"
+                ]
+            }
+        }
+    ]
+}
