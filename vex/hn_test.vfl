@@ -1,0 +1,15 @@
+#ifndef __HN_TEST__
+#define __HN_TEST__
+
+float hn_test()
+{
+    return 3;
+}
+
+int hn_test()
+{
+    int a = addpoint(0, {1, 2, 3});
+    return a;
+}
+
+#endif

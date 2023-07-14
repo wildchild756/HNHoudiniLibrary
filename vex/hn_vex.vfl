@@ -1,0 +1,8 @@
+#ifndef __HN_VEX__
+#define __HN_VEX__
+
+#include "hn_math.vfl"
+#include "hn_colorblend.vfl"
+#include "hn_texture.vfl"
+
+#endif

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+  <tool name="texture_refference_template" label="Texture Refference Template" icon="PLASMA_App">
+    <script scriptType="python"><![CDATA[import objecttoolutils
+
+root = hou.node("/obj")
+obj = root.createNode("geo", "__texture_refference_template__")
+obj.parm("vm_rendervisibility").set("")
+node = obj.createNode("hn.tools::texture_refference_template::1.0", "__texture_refference_template__")
+]]></script>
+  </tool>
+</shelfDocument>

@@ -1,0 +1,27 @@
+<menuDocument>
+    <menu>
+        <subMenu id="opmenu.actions_menu">
+            <label>Actions</label>
+            <actionItem id = "hn_convert_hda_to_subnet">
+                <label>Convert HDA to Subnet</label>
+                <context>
+                    <expression>
+                        <![CDATA[
+node = kwargs["node"]
+if node.isLockedHDA():
+    return True
+else:
+    return False
+                        ]]>
+                    </expression>
+                </context>
+                <scriptCode>
+                    <![CDATA[
+import converthdatosubnet
+converthdatosubnet.Convert(kwargs["node"])
+                    ]]>
+                </scriptCode>
+            </actionItem>
+        </subMenu>
+    </menu>
+</menuDocument>

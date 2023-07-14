@@ -1,0 +1,315 @@
+#ifndef __HN_COLOR_BLEND__
+#define __HN_COLOR_BLEND__
+
+#include "hn_math.vfl"
+
+#define HN_BLEND_MODE_MULTIPLY             0
+#define HN_BLEND_MODE_OVERLAY              1
+#define HN_BLEND_MODE_SOFT_LIGHT           2
+#define HN_BLEND_MODE_LINEAR_DODGE         3
+#define HN_BLEND_MODE_OVERWRITE            4
+#define HN_BLEND_MODE_DARKEN               5
+#define HN_BLEND_MODE_LINEAR_LIGHT         6
+#define HN_BLEND_MODE_LIGHTEN              7
+#define HN_BLEND_MODE_BURN                 8
+#define HN_BLEND_MODE_DIFFERENCE           9
+#define HN_BLEND_MODE_DODGE                10
+#define HN_BLEND_MODE_DIVIDE               11
+#define HN_BLEND_MODE_EXCLUSION            12
+#define HN_BLEND_MODE_HARDLIGHT            13
+#define HN_BLEND_MODE_HARDMIX              14
+#define HN_BLEND_MODE_LINEAR_LIGHT_ADD_SUB 15
+#define HN_BLEND_MODE_NEGATION             16
+#define HN_BLEND_MODE_PINLIGHT             17
+#define HN_BLEND_MODE_SCREEN               18
+#define HN_BLEND_MODE_SUBTRACT             19
+#define HN_BLEND_MODE_VIVID_LIGHT          20
+
+///multiply
+function vector hn_blendmultiply(vector base, blend; float opacity)
+{
+    vector out = base * blend;
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///overlay
+function vector hn_blendoverlay(vector base, blend; float opacity)
+{
+    vector out;
+    vector vone = set(1.0, 1.0, 1.0);
+    vector result1 = vone - (vone - base) * (vone - blend) * 2.0;
+    vector result2 = 2.0 * base * blend;
+    vector zeroorone = hn_step(base, set(0.5, 0.5, 0.5));
+    out = result2 * zeroorone + (vone - zeroorone) * result1;
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///softlight
+function vector hn_blendsoftlight(vector base, blend; float opacity)
+{
+    vector result1 = 2.0 * base * blend + base * base * (1.0 - 2.0 * blend);
+    vector result2 = sqrt(base) * (2.0 * blend - 1.0) + 2.0 * base * (1.0 - blend);
+    vector zeroorone = hn_step(set(0.5, 0.5, 0.5), blend);
+    vector out = result2 * zeroorone + (1 - zeroorone) * result1;
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///lineardodge
+function vector hn_blendlineardodge(vector base, blend; float opacity)
+{
+    vector out = base + blend;
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///overwrite
+function vector hn_blendoverwrite(vector base, blend; float opacity)
+{
+    vector out = lerp(base, blend, opacity);
+    return out;
+}
+
+///darken
+function vector hn_blenddarken(vector base, blend; float opacity)
+{
+    vector out = min(blend, base);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///linearlight
+function vector hn_blendlinearlight(vector base, blend; float opacity)
+{
+    vector out;
+    out.x = blend.x < 0.5 ? max(base.x + (2 * blend.x) - 1, 0) : min(base.x + 2 * (blend.x - 0.5), 1);
+    out.y = blend.y < 0.5 ? max(base.y + (2 * blend.y) - 1, 0) : min(base.y + 2 * (blend.y - 0.5), 1);
+    out.z = blend.z < 0.5 ? max(base.z + (2 * blend.z) - 1, 0) : min(base.z + 2 * (blend.z - 0.5), 1);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///lighten
+function vector hn_blendlighten(vector base, blend; float opacity)
+{
+    vector out = max(blend, base);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///burn
+function vector hn_blendburn(vector base, blend; float opacity)
+{
+    vector vone = set(1.0, 1.0, 1.0);
+    vector out = vone - (vone - blend) / base;
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///difference
+function vector hn_blenddifference(vector base, blend; float opacity)
+{
+    vector out = abs(blend - base);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///dodge
+function vector hn_blenddodge(vector base, blend; float opacity)
+{
+    vector vone = set(1.0, 1.0, 1.0);
+    vector out = base / (vone - blend);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///divide
+function vector hn_blenddivide(vector base, blend; float opacity)
+{
+    vector ep = set(0.000000000001, 0.000000000001, 0.000000000001);
+    vector out = base / (blend + ep);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///exclusion
+function vector hn_blendexclusion(vector base, blend; float opacity)
+{
+    vector out = blend + base - (2 * blend * base);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///hardlight
+function vector hn_blendhardlight(vector base, blend; float opacity)
+{
+    vector vone = set(1.0, 1.0, 1.0);
+    vector vhalf = set(0.5, 0.5, 0.5);
+    vector result1 = vone - 2.0 * (vone - base) * (vone - blend);
+    vector result2 = 2.0 * base * blend;
+    vector zeroorone = hn_step(blend, vhalf);
+    vector out = result2 * zeroorone + (vone - zeroorone) * result1;
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///hardmix
+function vector hn_blendhardmix(vector base, blend; float opacity)
+{
+    vector vone = set(1.0, 1.0, 1.0);
+    vector out = hn_step(vone - base, blend);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///linearlightaddsub
+function vector hn_blendlinearlightaddsub(vector base, blend; float opacity)
+{
+    vector vone = set(1.0, 1.0, 1.0);
+    vector out = blend + 2.0 * base - vone;
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///negation
+function vector hn_blendnegation(vector base, blend; float opacity)
+{
+    vector vone = set(1.0, 1.0, 1.0);
+    vector out = vone - abs(vone - blend - base);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///pinlight
+function vector hn_blendpinlight(vector base, blend; float opacity)
+{
+    vector vone = set(1.0, 1.0, 1.0);
+    vector vhalf = set(0.5, 0.5, 0.5);
+    vector check = hn_step(vhalf, blend);
+    vector result1 = check * max(2.0 * (base - vhalf), blend);
+    vector out = result1 + (vone - check) * min(2.0 * base, blend);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///screen
+function vector hn_blendscreen(vector base, blend; float opacity)
+{
+    vector vone = set(1.0, 1.0, 1.0);
+    vector out = vone - (vone - blend) * (vone - base);
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///subtract
+function vector hn_blendsubtract(vector base, blend; float opacity)
+{
+    vector out = base - blend;
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///vividlight
+function vector hn_blendvividlight(vector base, blend; float opacity)
+{
+    vector vone = set(1.0, 1.0, 1.0);
+    vector vhalf = set(0.5, 0.5, 0.5);
+    vector result1 = vone - (vone - blend) / (2.0 * base);
+    vector result2 = blend / (2.0 * (vone - base));
+    vector zeroorone = hn_step(vhalf, base);
+    vector out = result2 * zeroorone + (vone - zeroorone) * result1;
+    out = lerp(base, out, opacity);
+    return out;
+}
+
+///blend
+function vector hn_blend(vector base, blend; float opacity; int selector)
+{
+    if(selector == HN_BLEND_MODE_MULTIPLY)
+    {
+        return hn_blendmultiply(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_OVERLAY)
+    {
+        return hn_blendoverlay(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_SOFT_LIGHT)
+    {
+        return hn_blendsoftlight(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_LINEAR_DODGE)
+    {
+        return hn_blendlineardodge(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_OVERWRITE)
+    {
+        return hn_blendoverwrite(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_DARKEN)
+    {
+        return hn_blenddarken(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_LINEAR_LIGHT)
+    {
+        return hn_blendlinearlight(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_LIGHTEN)
+    {
+        return hn_blendlighten(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_BURN)
+    {
+        return hn_blendburn(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_DIFFERENCE)
+    {
+        return hn_blenddifference(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_DODGE)
+    {
+        return hn_blenddodge(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_DIVIDE)
+    {
+        return hn_blenddivide(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_EXCLUSION)
+    {
+        return hn_blendexclusion(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_HARDLIGHT)
+    {
+        return hn_blendhardlight(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_HARDMIX)
+    {
+        return hn_blendhardmix(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_LINEAR_LIGHT_ADD_SUB)
+    {
+        return hn_blendlinearlightaddsub(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_NEGATION)
+    {
+        return hn_blendnegation(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_PINLIGHT)
+    {
+        return hn_blendpinlight(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_SCREEN)
+    {
+        return hn_blendscreen(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_SUBTRACT)
+    {
+        return hn_blendsubtract(base, blend, opacity);
+    }
+    else if(selector == HN_BLEND_MODE_VIVID_LIGHT)
+    {
+        return hn_blendvividlight(base, blend, opacity);
+    }
+}
+#endif

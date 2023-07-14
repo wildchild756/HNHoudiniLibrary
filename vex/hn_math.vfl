@@ -1,0 +1,154 @@
+#ifndef __HN_MATH__
+#define __HN_MATH__
+
+// golden ratio 0.5 * (1 + sqrt(5))
+#define GOLDEN_RATIO	(1.6180339887)
+
+#define hn_clamp01(v) clamp(v, 0.0, 1.0)
+#define hn_pow3(v) ((v) * (v) * (v))
+#define hn_pow4(v) ((v) * (v) * (v) * (v))
+#define hn_pow5(v) ((v) * (v) * (v) * (v) * (v))
+#define hn_saturate(v) clamp(v, 0.0, 1.0)
+#define hn_swap(type, a, b) { type __tmp = a; a = b; b = __tmp; }
+#define hn_vec2tovec(v2, f) (set((v2).x, (v2).y, f))
+#define hn_vec2tovec4(v2, f1, f2) (set((v2).x, (v2).y, f1, f2))
+#define hn_vectovec4(v, f) (set((v).x, (v).y, (v).z, f))
+
+///math
+
+function float hn_step(float a, b)
+{
+    return b > a ? 1.0 : 0.0;
+}
+
+function vector2 hn_step(vector2 a, b)
+{
+    vector2 out;
+    out.x = hn_step(a.x, b.x);
+    out.y = hn_step(a.y, b.y);
+    return out;
+}
+
+function vector hn_step(vector a, b)
+{
+    vector out;
+    out.x = hn_step(a.x, b.x);
+    out.y = hn_step(a.y, b.y);
+    out.z = hn_step(a.z, b.z);
+    return out;
+}
+
+function vector4 hn_step(vector4 a, b)
+{
+    vector4 out;
+    out.x = hn_step(a.x, b.x);
+    out.y = hn_step(a.y, b.y);
+    out.z = hn_step(a.z, b.z);
+    out.w = hn_step(a.w, b.w);
+    return out;
+}
+
+function float hn_smoothstep(float min, max, x)
+{
+    float t;
+    t = clamp((x - min) / (max - min), 0.0, 1.0);
+    return t * t * (3.0 - 2.0 * t);
+}
+
+///quaternion
+
+function void hn_sincos(float a; export float s; export float c)
+{
+    s = sin(a);
+    c = cos(a);
+}
+
+function vector4 hn_quaternionfromaxisangle(vector axis; float angle)
+{
+	vector2 hsc;
+	hn_sincos(angle * 0.5, hsc.x, hsc.y);
+	return set(axis.x * hsc.x, axis.y * hsc.x, axis.z * hsc.x, hsc.y);
+}
+
+function vector4 hn_quaternionfromeuler(vector euler)
+{
+	//XMQuaternionRotationRollPitchYaw
+	vector4 sign_value = set(1.0, -1.0, -1.0, 1.0);
+	vector half_angle = euler.xyz * 0.5;
+	vector sin_value, cos_value;
+	hn_sincos(half_angle.x, sin_value.x, cos_value.x);
+    hn_sincos(half_angle.y, sin_value.y, cos_value.y);
+    hn_sincos(half_angle.z, sin_value.z, cos_value.z);
+	vector4 p0 = set(sin_value.x, cos_value.x, cos_value.x, cos_value.x);
+	vector4 y0 = set(cos_value.y, sin_value.y, cos_value.y, cos_value.y);
+	vector4 r0 = set(cos_value.z, cos_value.z, sin_value.z, cos_value.z);
+
+	vector4 p1 = set(cos_value.x, sin_value.x, sin_value.x, sin_value.x);
+	vector4 y1 = set(sin_value.y, cos_value.y, sin_value.y, sin_value.y);
+	vector4 r1 = set(sin_value.z, sin_value.z, cos_value.z, sin_value.z);
+
+	vector4 q1 = p1 * sign_value;
+	vector4 q0 = p0 * y0;
+	q1 = q1 * y1;
+	q0 = q0 * r0;
+	vector4 q = q1 * r1 + q0;
+
+	return q;
+}
+
+///noise
+
+function float hn_random(vector2 st)
+{
+    return frac(sin(dot(st.xy, set(12.9898, 78.233))) * 43758.5453123);
+}
+
+function float hn_noise(vector2 st)
+{
+    vector2 i, f;
+    i.x = floor(st.x);
+    i.y = floor(st.y);
+    f.x = frac(st.x);
+    f.y = frac(st.y);
+
+    float a = hn_random(i);
+    float b = hn_random(i + set(1.0, 0.0));
+    float c = hn_random(i + set(0.0, 1.0));
+    float d = hn_random(i + set(1.0, 1.0));
+
+    vector2 u = f * f * (3.0 - 2.0 * f);
+    return lerp(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+}
+
+function float hn_fbm(vector2 st; float lacunarity, gain; int fbmCount)
+{
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+
+    for(int i = 0; i < fbmCount; i++)
+    {
+        value += amplitude * hn_noise(frequency * st);
+        frequency *= lacunarity;
+        amplitude *= gain;
+    }
+
+    return value;
+}
+
+function float hn_fbm3(vector2 st; float lacunarity, gain)
+{
+    return hn_fbm(st, lacunarity, gain, 3);
+}
+
+function float hn_fbm5(vector2 st; float lacunarity, gain)
+{
+    return hn_fbm(st, lacunarity, gain, 5);
+}
+
+function float hn_fbm7(vector2 st; float lacunarity, gain)
+{
+    return hn_fbm(st, lacunarity, gain, 7);
+}
+
+#endif
