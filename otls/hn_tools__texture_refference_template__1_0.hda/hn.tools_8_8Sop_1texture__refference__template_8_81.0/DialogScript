@@ -1,0 +1,97 @@
+# Dialog script for hn.tools::texture_refference_template::1.0 automatically generated
+
+{
+    name	hn.tools::texture_refference_template::1.0
+    script	hn.tools::texture_refference_template::1.0
+    label	"Hn/Tools/Texture Refference Template::1.0"
+
+    help {
+	""
+    }
+
+    inputlabel	1	"Sub-Network Input #1"
+    inputlabel	2	"Sub-Network Input #2"
+    inputlabel	3	"Sub-Network Input #3"
+    inputlabel	4	"Sub-Network Input #4"
+
+    parm {
+        name    "texture"
+        label   "Texture"
+        type    image
+        default { "" }
+        parmtag { "script_callback_language" "python" }
+    }
+    parm {
+        name    "color"
+        label   "Color"
+        type    color
+        size    3
+        default { "1" "1" "1" }
+        range   { 0 1 }
+        parmtag { "script_callback_language" "python" }
+        parmtag { "units" "3" }
+    }
+    groupsimple {
+        name    "transform"
+        label   "Transform"
+
+        parm {
+            name    "direction"
+            label   "Direction"
+            type    integer
+            default { "0" }
+            menu {
+                "0" "XY"
+                "1" "YZ"
+                "2" "ZX"
+            }
+            range   { 0 10 }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "translate"
+            label   "Translate"
+            type    vector
+            size    3
+            default { "0" "0" "0" }
+            range   { -1 1 }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "rotate"
+            label   "Rotate"
+            type    vector
+            size    3
+            default { "0" "0" "0" }
+            range   { -1 1 }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "scale"
+            label   "Scale"
+            type    vector
+            size    3
+            default { "1" "1" "0" }
+            range   { -1 1 }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "shear"
+            label   "Shear"
+            type    vector
+            size    3
+            default { "0" "0" "0" }
+            range   { -1 1 }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "uniformScale"
+            label   "Uniform Scale"
+            type    float
+            default { "1" }
+            range   { 0 10 }
+            parmtag { "script_callback_language" "python" }
+        }
+    }
+
+}

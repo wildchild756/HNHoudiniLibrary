@@ -1,0 +1,14 @@
+Operator:     hn.tools::texture_refference_template::1.0
+Label:        Texture Refference Template
+Path:         oplib:/hn.tools::Sop/texture_refference_template::1.0?hn.tools::Sop/texture_refference_template::1.0
+Icon:         SOP_subnet
+Table:        Sop
+License:      
+Extra:        
+User:         
+Inputs:       0 to 0
+Subnet:       true
+Python:       false
+Empty:        false
+Modified:     Sun Jul 16 13:58:08 2023
+
