@@ -1,0 +1,14 @@
+Operator:     hnlib.tools::csv_loader::1.0
+Label:        CSV_Loader
+Path:         oplib:/hnlib.tools::Sop/csv_loader::1.0?hnlib.tools::Sop/csv_loader::1.0
+Icon:         SOP_subnet
+Table:        Sop
+License:      
+Extra:        
+User:         
+Inputs:       0 to 0
+Subnet:       true
+Python:       false
+Empty:        false
+Modified:     Mon Jul 17 11:42:36 2023
+

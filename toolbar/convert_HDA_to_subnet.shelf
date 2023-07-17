@@ -7,11 +7,11 @@
 
   <tool name="convertHDAtosubnet" label="Convert HDA to Subnet" icon="PLASMA_App">
     <script scriptType="python"><![CDATA[import hou
-import converthdatosubnet
+import convert_hda_to_subnet
 
 for node in hou.selectedNodes():
     if node.isLockedHDA():
-        converthdatosubnet.Convert(node)
+        convert_hda_to_subnet.Convert(node)
     else:
         hou.ui.displayMessage("Please select a locked HDA.")]]></script>
   </tool>

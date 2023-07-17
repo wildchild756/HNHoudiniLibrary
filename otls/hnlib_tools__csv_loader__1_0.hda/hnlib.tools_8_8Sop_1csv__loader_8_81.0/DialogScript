@@ -1,0 +1,19 @@
+# Dialog script for hnlib.tools::csv_loader::1.0 automatically generated
+
+{
+    name	hnlib.tools::csv_loader::1.0
+    script	hnlib.tools::csv_loader::1.0
+    label	CSV_Loader
+
+    help {
+	""
+    }
+
+    parm {
+        name    "path"
+        label   "File Path"
+        type    string
+        default { "" }
+        parmtag { "script_callback_language" "python" }
+    }
+}

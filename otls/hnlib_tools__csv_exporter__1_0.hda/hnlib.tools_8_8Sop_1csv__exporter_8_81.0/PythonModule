@@ -1,0 +1,12 @@
+import csv_operator
+
+def Export():
+    node = hou.pwd()
+    path = node.parm("path").eval()
+    attrListCount = node.parm("attrList").eval()
+    attrList = []
+    for i in range(attrListCount):
+        attr = node.parm("attribute" + str(i + 1)).eval()
+        attrList.append(attr)
+    
+    csv_operator.ExportCsv(path, attrList)
