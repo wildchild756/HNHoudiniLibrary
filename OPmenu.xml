@@ -2,7 +2,7 @@
     <menu>
         <subMenu id="opmenu.actions_menu">
             <label>Actions</label>
-            <actionItem id = "hn_convert_hda_to_subnet">
+            <scriptItem id = "hn_convert_hda_to_subnet">
                 <label>Convert HDA to Subnet</label>
                 <context>
                     <expression>
@@ -17,11 +17,11 @@ else:
                 </context>
                 <scriptCode>
                     <![CDATA[
-import converthdatosubnet
-converthdatosubnet.Convert(kwargs["node"])
+import convert_hda_to_subnet
+convert_hda_to_subnet.Convert(kwargs["node"])
                     ]]>
                 </scriptCode>
-            </actionItem>
+            </scriptItem>
         </subMenu>
     </menu>
 </menuDocument>
