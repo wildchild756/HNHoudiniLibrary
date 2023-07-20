@@ -8,9 +8,17 @@
   <tool name="hn_wrangle" label="HN Wrangle" icon="PLASMA_App">
     <script scriptType="python"><![CDATA[import soptoolutils
 
-node = soptoolutils.genericTool(kwargs, "attribwrangle")
-snp = node.parm('snippet')
-snp.set("#include <hn_vex.vfl>\n\n")
-snp.eval()]]></script>
+created = False
+selection = hou.selectedNodes()
+if selection != ():
+    for selectedNode in hou.selectedNodes():
+        if not created:
+            if selectedNode.type().category().name() == "Sop":
+                node = selectedNode.createOutputNode("attribwrangle")
+                created = True
+                snp = node.parm('snippet')
+                snp.set("#include <hn_vex.vfl>\n\n")
+                snp.eval()
+]]></script>
   </tool>
 </shelfDocument>
