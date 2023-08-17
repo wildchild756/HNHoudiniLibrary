@@ -15,7 +15,8 @@
                     "$PACKAGE_PATH/otls",
                     "$PACKAGE_PATH/otls/examples"
                 ]
-            }
+            },
+            "HOUDINI_VEX_PATH": "$PACKAGE_PATH/vex"
         }
     ]
 }
