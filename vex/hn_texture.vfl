@@ -3,6 +3,34 @@
 
 #include "hn_math.vfl"
 
+vector grid2octahedron(vector pos)
+{
+    pos.y = 1 - abs(pos.x) - abs(pos.z);
+    vector newPos = pos;
+    if(pos.y < 0)
+    {
+        newPos.x = (1 - abs(pos.z)) * (pos.x >= -0.00001 ? 1 : -1);
+        newPos.z = (1 - abs(pos.x)) * (pos.z >= -0.00001 ? 1 : -1);
+    }
+    newPos = normalize(newPos);
 
+    return newPos;
+}
+
+vector octahedron2grid(vector pos)
+{
+    vector newPos = {0, 0, 0};
+    vector absPos = set(abs(pos.x), abs(pos.y), abs(pos.z));
+    float dt = dot({1, 1, 1}, absPos);
+    newPos.x = pos.x / dt;
+    newPos.z = pos.z / dt;
+    if(pos.y <= 0)
+    {
+        newPos.x = (1 - abs(newPos.z)) * (newPos.x >= -0.00001 ? 1 : -1);
+        newPos.z = (1 - abs(newPos.x)) * (newPos.z >= -0.00001 ? 1 : -1);
+    }
+
+    return newPos;
+}
 
 #endif
