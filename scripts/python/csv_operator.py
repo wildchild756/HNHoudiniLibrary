@@ -24,8 +24,10 @@ def LoadCsv(path):
             if isHeader:
                 length = len(row)
                 for i in range(length):
+                    row[i] = row[i].replace('.', '_')
+                    row[i] = row[i].replace(' ', '')
                     header.append(row[i])
-                isHeader = False                  
+                isHeader = False               
             elif isFirstRow:        
                 pnt = geo.createPoint()
                 for i in range(length):
