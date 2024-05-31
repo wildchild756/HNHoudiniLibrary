@@ -2,6 +2,8 @@
 #define __HN_VEX__
 
 #include "hn_math.vfl"
+
+#include "hn_geo.vfl"
 #include "hn_colorblend.vfl"
 #include "hn_texture.vfl"
 

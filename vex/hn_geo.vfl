@@ -1,0 +1,21 @@
+#ifndef _HN_GEO_
+#define _HN_GEO_
+
+#include "hn_math.vfl"
+
+///insert point to line
+function int hn_insertpoint2line(int geohandle; int primnum; float position)
+{
+    int pt0 = primpoint(geohandle, primnum, 0);
+    vector pos0 = point(geohandle, "P", pt0);
+    int pt1 = primpoint(geohandle, primnum, 1);
+    vector pos1 = point(geohandle, "P", pt1);
+    vector newPos = lerp(pos0, pos1, position);
+    int newPt = addpoint(geohandle, newPos);
+    removeprim(geohandle, primnum, 0);
+    addprim(geohandle, "polyline", pt0, newPt);
+    addprim(geohandle, "polyline", newPt, pt1);
+    return newPt;
+}
+
+#endif
