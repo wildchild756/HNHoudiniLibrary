@@ -1,5 +1,6 @@
 import csv
 import struct
+import re
 import hou
 
 ##Load
@@ -24,8 +25,7 @@ def LoadCsv(path):
             if isHeader:
                 length = len(row)
                 for i in range(length):
-                    row[i] = row[i].replace('.', '_')
-                    row[i] = row[i].replace(' ', '')
+                    row[i] = re.sub(r'\W|^(?=\d)','_',row[i])
                     header.append(row[i])
                 isHeader = False               
             elif isFirstRow:        
@@ -33,12 +33,18 @@ def LoadCsv(path):
                 for i in range(length):
                     default = GetDefault(row[i])
                     geo.addAttrib(hou.attribType.Point,header[i], default, False, False)
-                    pnt.setAttribValue(header[i],row[i])
+                    try:
+                        pnt.setAttribValue(header[i],row[i])
+                    except:
+                        pass
                 isFirstRow = False
             else:
                 pnt = geo.createPoint()
-                for i in range(length):                
-                    pnt.setAttribValue(header[i],row[i])
+                for i in range(length):   
+                    try:             
+                        pnt.setAttribValue(header[i],row[i])
+                    except:
+                        pass
 
 
 ##Export
