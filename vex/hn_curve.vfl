@@ -9,7 +9,7 @@ function vector hn_catenarycurve(vector p0; vector p1; float length; float t)
     float h = abs(p0.x - p1.x);
     float v = p1.y - p0.y;
 
-    float a = 0.1;
+    float a = 1e-2;
     for(int i = 0; i < 100; i++)
     {
         float f = 2 * a * sinh(h / (2 * a)) - sqrt(s * s - v * v);
@@ -23,7 +23,7 @@ function vector hn_catenarycurve(vector p0; vector p1; float length; float t)
         a = new_a;
     }
 
-    float d1 = 0.5 * (h + a * log((s + v) / max((s - v), 1e-6)));
+    float d1 = 0.5 * (h + a * log(max((s + v), 1e-6) / max((s - v), 1e-6)));
     float d0 = h - d1;
 
     float k = p0.x + d0;
