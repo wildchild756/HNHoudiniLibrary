@@ -1,0 +1,38 @@
+#ifndef __HN_CURVE__
+#define __HN_CURVE__
+
+// ref: https://www.artstation.com/artwork/eR364G
+function vector hn_catenarycurve(vector p0; vector p1; float length; float t)
+{
+    float s = length + length(set(p0.x, p0.y) - set(p1.x, p1.y));
+
+    float h = abs(p0.x - p1.x);
+    float v = p1.y - p0.y;
+
+    float a = 0.1;
+    for(int i = 0; i < 100; i++)
+    {
+        float f = 2 * a * sinh(h / (2 * a)) - sqrt(s * s - v * v);
+        float df = 2 * sinh(h / (2 * a)) - (h / a) * cosh(h / (2 * a));
+        float new_a = a - f / df;
+        if(abs(new_a - a) < 1e-6)
+        {
+            a = new_a;
+            break;
+        }
+        a = new_a;
+    }
+
+    float d1 = 0.5 * (h + a * log((s + v) / max((s - v), 1e-6)));
+    float d0 = h - d1;
+
+    float k = p0.x + d0;
+    float c = p0.y - a * cosh((p0.x - k) / a);
+
+    float x = lerp(p0.x, p1.x, t);
+    float y = a * cosh((x - k) / a) + c;
+    float z = lerp(p0.z, p1.z, t);
+    return set(x, y, z);
+}
+
+#endif
